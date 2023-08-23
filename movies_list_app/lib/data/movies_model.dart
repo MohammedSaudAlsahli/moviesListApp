@@ -1,11 +1,11 @@
-class Movies {
-  int page;
-  int totalPages;
-  int totalResults;
+class Movie {
+  num page;
+  num totalPages;
+  num totalResults;
   List<dynamic> keywords;
   List<Result> results;
 
-  Movies({
+  Movie({
     required this.page,
     required this.totalPages,
     required this.totalResults,
@@ -13,50 +13,53 @@ class Movies {
     required this.results,
   });
 
-  factory Movies.fromJson(Map<String, dynamic> json) {
-    return Movies(
+  factory Movie.fromJson(Map<String, dynamic> json) {
+    return Movie(
       page: json['page'],
       totalPages: json['totalPages'],
       totalResults: json['totalResults'],
       keywords: List<dynamic>.from(json['keywords']),
-      results: List<Result>.from(json['results'].map((result) => Result.fromJson(result))),
+      results: List<Result>.from(
+          json['results'].map((result) => Result.fromJson(result))),
     );
   }
+
+  get data => null;
 }
 
 class Result {
-  int id;
-  String mediaType;
-  bool adult;
-  List<int> genreIds;
-  String originalLanguage;
-  String originalTitle;
-  String overview;
-  double popularity;
-  String releaseDate;
-  String title;
-  bool video;
-  double voteAverage;
-  int voteCount;
-  String backdropPath;
-  String posterPath;
+  num? id;
+  String? mediaType;
+  bool? adult;
+  List<num>? genreIds;
+  String? originalLanguage;
+  String? originalTitle;
+  String? overview;
+  num? popularity;
+  String? releaseDate;
+  String? title;
+  bool? video;
+  num? voteAverage;
+  num? voteCount;
+  String? backdropPath;
+  String? posterPath;
 
   Result({
-    required this.id,
-    required this.mediaType,
-    required this.adult,
-    required this.genreIds,
-    required this.originalLanguage,
-    required this.originalTitle,
-    required this.overview,
-    required this.popularity,
-    required this.releaseDate,
-    required this.title,
-    required this.video,
-    required this.voteAverage,
-    required this.voteCount,
-    required this.backdropPath,
-    required this.posterPath,
+    this.id,
+    this.mediaType,
+    this.adult,
+    this.genreIds,
+    this.originalLanguage,
+    this.originalTitle,
+    this.overview,
+    this.popularity,
+    this.releaseDate,
+    this.title,
+    this.video,
+    this.voteAverage,
+    this.voteCount,
+    this.backdropPath,
+    this.posterPath,
   });
 
   factory Result.fromJson(Map<String, dynamic> json) {
@@ -64,7 +67,7 @@ class Result {
       id: json['id'],
       mediaType: json['mediaType'],
       adult: json['adult'],
-      genreIds: List<int>.from(json['genreIds']),
+      genreIds: List<num>.from(json['genreIds']),
       originalLanguage: json['originalLanguage'],
       originalTitle: json['originalTitle'],
       overview: json['overview'],

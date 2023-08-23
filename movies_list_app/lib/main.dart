@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:movies_list_app/components/card.dart';
+import 'package:movies_list_app/data/api_call.dart';
+import 'package:movies_list_app/data/movies_model.dart';
 
 void main() {
   runApp(const MainApp());
@@ -12,58 +15,96 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Container(
-            clipBehavior: Clip.hardEdge,
-            height: 600 * 9 / 16,
-            width: 400 * 9 / 16,
-            decoration: BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Stack(
-              children: [
-                Image.network(
-                  'https://image.tmdb.org/t/p/w600_and_h900_bestv2/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg',
-                  fit: BoxFit.cover,
-                ),
-                const Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 100,
-                  child: Column(
-                    children: [
-                      Text(
-                        'Your Text Here 1',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'Your Text Here 2',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'Your Text Here 3',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+          child: FutureBuilder(
+            future: MovieApiCall().movieApiCall(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.connectionState == ConnectionState.done) {
+                final movie = snapshot.data as Movie;
+                return GridView.builder(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 64),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                    mainAxisExtent: 530 * 9 / 16,
                   ),
-                ),
-              ],
-            ),
+                  itemCount: movie.results.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final result = movie.results[index];
+                    return MovieCard(
+                      movie: result,
+                    );
+                  },
+                );
+              } else {
+                return const Text('Error');
+              }
+            },
           ),
         ),
       ),
     );
   }
 }
+/* 
+FutureBuilder(
+            future: MovieApiCall().movieApiCall(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.connectionState == ConnectionState.done) {
+                final movie = snapshot.data as Movie;
+                return GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                    mainAxisExtent: 250,
+                  ),
+                  itemCount: movie.results.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final result = movie.results[index];
+                    return MovieCard(
+                      movie: result,
+                    );
+                  },
+                );
+              } else {
+                return const Text('Error');
+              }
+            },
+          ),
+
+FutureBuilder(
+            future: MovieApiCall().movieApiCall(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.connectionState == ConnectionState.done) {
+                final movie = snapshot.data;
+                return GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                    mainAxisExtent: 250,
+                  ),
+                  itemCount: movie?.data?.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (movie?.data?.isEmpty ?? true) {
+                      return const SizedBox.shrink();
+                    }
+                    return MovieCard(
+                      movie: movie?.data?[index],
+                    );
+                  },
+                );
+              } else {
+                return const Text('Error');
+              }
+            },
+          ),
+ */
